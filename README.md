@@ -10,26 +10,35 @@ PLD is a Python program that analyzes PDF files, extracts images, processes them
 
 ## Installation
 
-Clone the PLD repository:
-
-```bash
-git clone https://github.com/icij/pld.git
-```
-
 Install Tesseract OCR and pdftoppm using your package manager. For example, on Ubuntu:
 
 ```bash
 sudo apt install tesseract-ocr tesseract-ocr-all poppler-utils
 ```
 
-Install the required Python packages:
+### From PyPi
+
+Install with pip:
+
+```bash
+python3 -m pip install --user pdf-language-detector
+```
+
+### From the sources
+
+Clone the PLD repository:
+
+```bash
+git clone git@github.com:github.com/icij/pld.git
+```
+
+Install the required Python packages with poetry:
 
 ```bash
 poetry install
 ````
 
 ## Usage
-
 
 ```bash
 poetry run pld --help
