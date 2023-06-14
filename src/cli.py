@@ -8,7 +8,7 @@ app = typer.Typer()
 
 @app.command()
 def main(languages: List[str] = typer.Option(..., '--language'), 
-         input_dir: Path = Path(),
+         input_dir: Path  = typer.Option(..., '--input_dir'),
          output_dir: Optional[Path] = typer.Option('out'),
          max_pages: Optional[int] = 5):
     """

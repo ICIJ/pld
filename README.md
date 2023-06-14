@@ -35,7 +35,7 @@ poetry install
 poetry run pld --help
 
     --language A comma-separated list of ISO3 language codes to detect.
-    --input-dir (optional): Path to the input directory containing PDF files. Default is the current directory.
+    --input-dir: Path to the input directory containing PDF files. Default is the current directory.
     --output-dir (optional): Path to the output directory. Default is 'out' directory in the current directory.
     --max-pages (optional): Maximum number of pages to process per PDF file. Default is 5.
 ```
