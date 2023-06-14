@@ -24,3 +24,4 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 pld = "src.cli:app"
+pdf-language-detector = "src.cli:app"
