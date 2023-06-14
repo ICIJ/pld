@@ -10,7 +10,7 @@ PLD is a Python program that analyzes PDF files, extracts images, processes them
 
 ## Installation
 
-1. Clone the PLD repository:
+Clone the PLD repository:
 
 ```bash
 git clone https://github.com/icij/pld.git
