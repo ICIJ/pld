@@ -1,7 +1,6 @@
 import json
 import os
 import pytesseract
-import typer
 
 from lingua import IsoCode639_3, LanguageDetectorBuilder
 from langcodes import Language, find as find_language
@@ -11,13 +10,11 @@ from rich.progress import Progress, SpinnerColumn
 from sh import pdftoppm
 from typing import Optional, List
 
-app = typer.Typer()
-
 class PdfLanguageDetector:
     def __init__(self, 
                 languages: List[str], 
                 input_dir: Path = Path(),
-                output_dir: Optional[Path] = typer.Option('out'),
+                output_dir: Optional[Path] = 'out',
                 max_pages: Optional[int] = 5):
         """
         Initialize the PdfLanguageDetector class.
@@ -227,25 +224,3 @@ class PdfLanguageDetector:
             Languages as IsoCode639_3 constants
         """
         return [IsoCode639_3[lang.to_alpha3().upper()] for lang in self.languages]
-    
-
-@app.command()
-def main(languages: List[str] = typer.Option(..., '--language'), 
-         input_dir: Path = Path(),
-         output_dir: Optional[Path] = typer.Option('out'),
-         max_pages: Optional[int] = 5):
-    """
-    Main function to process PDF files and detect the dominant language.
-
-    Args:
-        language: List of ISO3 language codes.
-        input_dir: Path to the input directory containing PDF files.
-        output_dir: Path to the output directory.
-        max_pages: Maximum number of pages to process per PDF file.
-    """
-    detector = PdfLanguageDetector(languages, input_dir, output_dir, max_pages)
-    detector.process_input_files()
-
-
-if __name__ == "__main__":
-    typer.run(main)

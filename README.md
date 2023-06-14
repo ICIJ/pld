@@ -16,23 +16,23 @@ PLD is a Python program that analyzes PDF files, extracts images, processes them
 git clone https://github.com/icij/pld.git
 ```
 
+Install Tesseract OCR and pdftoppm using your package manager. For example, on Ubuntu:
+
+```bash
+sudo apt install tesseract-ocr tesseract-ocr-all poppler-utils
+```
+
 Install the required Python packages:
 
 ```bash
 poetry install
 ````
 
-Install Tesseract OCR and pdftoppm using your package manager. For example, on Ubuntu:
-
-```bash
-sudo apt-get install tesseract-ocr tesseract-ocr-all poppler-utils
-```
-
 ## Usage
 
 
 ```bash
-poetry run python pld.py --help
+poetry run pld --help
 
     --language A comma-separated list of ISO3 language codes to detect.
     --input-dir (optional): Path to the input directory containing PDF files. Default is the current directory.
@@ -45,13 +45,13 @@ poetry run python pld.py --help
 Process PDF files in the current directory, detect English and Spanish languages, and save the results in the 'results' directory:
 
 ```bash
-poetry run python pld.py --language eng y --languagespa --output-dir results
+poetry run pld --language eng y --languagespa --output-dir results
 ```
 
 Process PDF files in the 'documents' directory, detect French and Greek languages, and limit the processing to 3 pages per file:
 
 ```bash
-python run python pld.py --language fra --language ell --input-dir documents --max-pages 3
+python run pld --language fra --language ell --input-dir documents --max-pages 3
 ```
 
 ## License
