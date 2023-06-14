@@ -2,7 +2,7 @@
 name = "pld"
 version = "0.0.0"
 description = "A python script to iterate over a list of PDF in a directory and try to guess their language with Tesseract OCR."
-authors = ["ICIJ <engineering@@icij.org>"]
+authors = ["ICIJ <engineering@icij.org>"]
 readme = "README.md"
 packages = [{include = "src"}]
 
