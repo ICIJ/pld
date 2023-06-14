@@ -41,7 +41,7 @@ poetry install
 ## Usage
 
 ```bash
-poetry run pld --help
+pld --help
 
     --language A comma-separated list of ISO3 language codes to detect.
     --input-dir: Path to the input directory containing PDF files. Default is the current directory.
@@ -54,13 +54,13 @@ poetry run pld --help
 Process PDF files in the current directory, detect English and Spanish languages, and save the results in the 'results' directory:
 
 ```bash
-poetry run pld --language eng --language spa --input-dir documents --output-dir results
+pld --language eng --language spa --input-dir documents --output-dir results
 ```
 
 Process PDF files in the 'documents' directory, detect French and Greek languages, and limit the processing to 3 pages per file:
 
 ```bash
-python run pld --language fra --language ell --input-dir documents --max-pages 3
+pld --language fra --language ell --input-dir documents --max-pages 3
 ```
 
 ## License
