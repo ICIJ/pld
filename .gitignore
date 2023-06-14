@@ -10,5 +10,5 @@ dist
 .env
 .cache
 .pytest_cache
-./in
-./out
+in/
+out/
