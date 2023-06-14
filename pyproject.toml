@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "plp"
+version = "0.0.0"
+description = "A python script to iterate over a list of PDF in a directory and try to guess their language with Tesseract OCR."
+authors = ["Pierre Romera <hello@pirhoo.com>"]
+readme = "README.md"
+packages = [{include = "plp"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytesseract = "^0.3.10"
+sh = "^2.0.4"
+typer = {extras = ["all"], version = "^0.9.0"}
+lingua-language-detector = "^1.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+plp = "plp"
