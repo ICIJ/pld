@@ -2,16 +2,21 @@ import json
 import os
 import pytesseract
 
-from multiprocessing import Pool, JoinableQueue
+from multiprocessing import Pool, JoinableQueue, Manager
 from lingua import IsoCode639_3, LanguageDetectorBuilder
 from langcodes import Language, find as find_language
 from pathlib import Path
 from PIL import Image
 from rich import print
+from rich.progress import Progress, SpinnerColumn
 from sh import pdftoppm
 from typing import Optional, List
 
 class PdfLanguageDetector:
+    STATUS_SKIPPED = 'SKIPPED'
+    STATUS_DONE = 'DONE'
+    STATUS_FAILED = 'FAILED'
+    
     def __init__(self, 
                 languages: List[str], 
                 input_dir: Path = Path(),
@@ -200,16 +205,15 @@ class PdfLanguageDetector:
 
     def worker(self, queue: JoinableQueue):
         while True:
-            input_file, output_file_dir = queue.get()
+            input_file, output_file_dir, tasks_statuses = queue.get()
             try:
                 if self.resume and self.is_already_analyzed(output_file_dir):
-                    print(f"→ {input_file.resolve()} [blue]SKIPPED[/blue]")
+                    tasks_statuses[input_file] = dict(status=PdfLanguageDetector.STATUS_SKIPPED)
                 else:
-                    print(f"┅ {input_file.resolve()}")
                     lang = self.analyse_file(input_file, output_file_dir)
-                    print(f"✓ {input_file.resolve()} [green]{lang}[/green]")
+                    tasks_statuses[input_file] = dict(status=PdfLanguageDetector.STATUS_DONE, lang=lang)
             except Exception:
-                print(f"✕ {input_file.resolve()} [red]ERROR[/red]")
+                tasks_statuses[input_file] = dict(status=PdfLanguageDetector.STATUS_FAILED)
             finally:
                 queue.task_done()
 
@@ -221,10 +225,67 @@ class PdfLanguageDetector:
         queue = JoinableQueue(self.parallel)
         # Start a pool of worker processes
         with Pool(self.parallel, self.worker, (queue,)):
-            for input_file in self.input_dir.glob('**/*.pdf'):
-                output_file_dir = self.get_output_dir(input_file)
-                queue.put((input_file, output_file_dir))
+            # Create progress bar
+            with Progress(SpinnerColumn(), "[progress.description]{task.description}", transient=True) as progress:
+                # Shared dictionary for task statuses
+                tasks_statuses = Manager().dict()
+                # Dictionary for tracking tasks' progress
+                tasks_progresses = dict()
+                for input_file in self.input_dir.glob('**/*.pdf'):
+                    # Add task to the progress bar
+                    if len(tasks_progresses) < self.parallel:
+                        tasks_progresses[input_file] = progress.add_task(input_file.resolve(), total=None)
+                    self.process_file(input_file, queue, progress, tasks_statuses, tasks_progresses)
+                self.print_tasks_statuses(tasks_statuses)
             queue.join()
+
+    def process_file(self, input_file, queue, progress, tasks_statuses, tasks_progresses):
+        """
+        Process a single PDF file.
+
+        Args:
+            input_file: Path to the input PDF file.
+            queue: JoinableQueue for worker processes.
+            progress: Progress bar for displaying task progress.
+            tasks_statuses: Shared dictionary for task statuses.
+            tasks_progresses: Dictionary for tracking tasks' progress.
+        """
+        output_file_dir = self.get_output_dir(input_file)
+        queue.put((input_file, output_file_dir, tasks_statuses))
+        self.update_progress(progress, tasks_statuses, tasks_progresses)
+
+    def update_progress(self, progress, tasks_statuses, tasks_progresses):
+        """
+        Update the progress bar and print task statuses.
+
+        Args:
+            progress: Progress bar for displaying task progress.
+            tasks_statuses: Shared dictionary for task statuses.
+            tasks_progresses: Dictionary for tracking tasks' progress.
+        """
+        for key in tasks_statuses.copy():
+            if key in tasks_progresses:
+                task = tasks_progresses.pop(key)
+                progress.remove_task(task)
+        self.print_tasks_statuses(tasks_statuses)
+
+    def print_tasks_statuses(self, tasks_statuses):
+        """
+        Print the statuses of completed tasks.
+
+        Args:
+            tasks_statuses: Shared dictionary for task statuses.
+        """
+        for key in tasks_statuses.copy():
+            task = tasks_statuses.pop(key)
+            if task['status'] ==  PdfLanguageDetector.STATUS_DONE:
+                print(f"✓ {key.resolve()} [green]{task['lang']}[/green]")
+            elif task['status'] == PdfLanguageDetector.STATUS_SKIPPED:
+                print(f"→ {key.resolve()} [blue]SKIPPED[/blue]")
+            elif task['status'] == PdfLanguageDetector.STATUS_FAILED:
+                print(f"✕ {key.resolve()} [red]FAILED[/red]")
+            else:
+                print(f"? {key.resolve()} [orange]UNKNOWN[/orange]")
                 
     def get_output_dir(self, input_file: Path) -> Path:
         """
