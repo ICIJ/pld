@@ -81,6 +81,7 @@ pld detect --help
     --resume (optional): Skip PDF files already analyzed.
     --skip-images (optional): Skip the extraction of PDF files a images.
     --skip-ocr (optional): Skip the OCR of images from PDF files.
+    --parallel (optional): Number of threads to run in parallel.
 ```
 
 ### Report
