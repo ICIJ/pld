@@ -46,6 +46,13 @@ class PdfLanguageDetector:
         """
         for dir_path in dirs:
             os.makedirs(dir_path.resolve(), exist_ok=True)
+    
+    def extract_meta(self, input_file: Path):
+        output_dir = self.get_output_dir(input_file)
+        meta_file = output_dir / 'meta.json'
+        meta = dict(input_file=str(input_file.resolve()), output_dir=str(output_dir.resolve()))
+        with meta_file.open("w") as f:
+            f.write(json.dumps(meta, indent=2))
 
     def extract_images(self, input_file: Path, images_dir: Path):
         """
@@ -173,6 +180,7 @@ class PdfLanguageDetector:
         texts_dir = output_file_dir / 'texts'
         langs_dir = output_file_dir / 'langs'
         self.create_output_directories(images_dir, texts_dir, langs_dir)
+        self.extract_meta(input_file)
         if not self.skip_images:
             self.extract_images(input_file, images_dir)
         if not self.skip_ocr:

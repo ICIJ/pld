@@ -67,8 +67,12 @@ docker run -it icij/pld pld --help
 
 ## Usage
 
+### Detect
+
+This command process PDF files and detect the dominant language.
+
 ```
-pld --help
+pld detect --help
 
     --language A list of ISO3 language codes to detect.
     --input-dir: Path to the input directory containing PDF files. Default is the current directory.
@@ -76,6 +80,16 @@ pld --help
     --max-pages (optional): Maximum number of pages to process per PDF file. Default is 5.
     --skip-images (optional): Skip the extraction of PDF files a images.
     --skip-ocr (optional): Skip the OCR of images from PDF files.
+```
+
+### Report
+
+This command print a report from the previously detected language (using the same output dir).
+
+```
+pld report --help
+
+    --output-dir: Path to the output directory. Default is 'out' directory in the current directory.
 ```
 
 ## Examples
