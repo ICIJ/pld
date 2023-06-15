@@ -4,9 +4,9 @@ PLD is a Python program that analyzes PDF files, extracts images, processes them
 
 ## Requirements
 
-- Python 3.8 or above
-- Tesseract OCR
-- pdftoppm
+- [Python 3.8](https://www.python.org/downloads/) or above
+- [Tesseract OCR](https://github.com/tesseract-ocr/tesseract)
+- [pdftoppm](https://poppler.freedesktop.org/)
 
 ## Installation
 
