@@ -33,7 +33,7 @@ class Report:
         meta = self.get_output_dir_meta(output_dir)
         lang = max(coeff_avgs, key=coeff_avgs.get)
         lang_name = Language.get(lang).display_name().upper()
-        return dict(lang=lang, lang_name=lang_name) | meta
+        return dict(lang=lang, lang_name=lang_name, **meta)
         
     def get_coeff_avgs(self, output_dir: Path) -> dict:
         """
