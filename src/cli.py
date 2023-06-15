@@ -8,7 +8,7 @@ app = typer.Typer()
 
 @app.command()
 def main(languages: List[str] = typer.Option(..., '--language', help="An ISO3 language code."), 
-         input_dir: Path  = typer.Option(..., '--input_dir', help="Path to the input directory."),
+         input_dir: Path  = typer.Option(..., '--input-dir', help="Path to the input directory."),
          output_dir: Optional[Path] = typer.Option('out', help="Path to the output directory."),
          max_pages: Optional[int] = typer.Option(5, help="Maximum number of pages to process per PDF file.")):
     """
