@@ -199,7 +199,7 @@ class PdfLanguageDetector:
         """
         Process all the PDF files in the input directory.
         """
-        for input_file in sorted(self.input_dir.glob('**/*.pdf')):                    
+        for input_file in self.input_dir.glob('**/*.pdf'):
             with Progress(SpinnerColumn(), "[progress.description]{task.description}", transient=True) as progress:
                 progress.add_task(input_file.resolve(), total=None)
                 output_file_dir = self.get_output_dir(input_file)
