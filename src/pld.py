@@ -7,6 +7,7 @@ from langcodes import Language, find as find_language
 from pathlib import Path
 from PIL import Image
 from rich.progress import Progress, SpinnerColumn
+from rich import print
 from sh import pdftoppm
 from typing import Optional, List
 
@@ -16,6 +17,7 @@ class PdfLanguageDetector:
                 input_dir: Path = Path(),
                 output_dir: Optional[Path] = 'out',
                 max_pages: Optional[int] = 5,
+                resume:  Optional[bool] = False,
                 skip_images:  Optional[bool] = False,
                 skip_ocr:  Optional[bool] = False):
         """
@@ -26,6 +28,7 @@ class PdfLanguageDetector:
             input_dir: Path to the input directory.
             output_dir: Path to the output directory.
             max_pages: Maximum number of pages to process per PDF file.
+            resume: Skip PDF files already analyzed.
             skip_images: Skip the extraction of PDF files as images.
             skip_ocr: Skip the OCR of images from PDF files.
         """
@@ -34,6 +37,7 @@ class PdfLanguageDetector:
         self.input_dir = input_dir
         self.output_dir = output_dir
         self.max_pages = max_pages
+        self.resume = resume
         self.skip_images = skip_images
         self.skip_ocr = skip_ocr
 
@@ -197,10 +201,16 @@ class PdfLanguageDetector:
         """
         for input_file in sorted(self.input_dir.glob('**/*.pdf')):                    
             with Progress(SpinnerColumn(), "[progress.description]{task.description}", transient=True) as progress:
-                output_file_dir = self.get_output_dir(input_file)
                 progress.add_task(input_file.resolve(), total=None)
-                lang = self.analyse_file(input_file, output_file_dir)
-                print(f"✓ {input_file.resolve()} {lang}")
+                output_file_dir = self.get_output_dir(input_file)
+                try:
+                    if self.resume and self.is_already_analyzed(output_file_dir):
+                        print(f"→ {input_file.resolve()} [blue]SKIPPED[/blue]")
+                    else:
+                        lang = self.analyse_file(input_file, output_file_dir)
+                        print(f"✓ {input_file.resolve()} [green]{lang}[/green]")            
+                except Exception as e:
+                        print(f"✕ {input_file.resolve()} [red]ERROR[/red]")
                     
 
     def get_output_dir(self, input_file: Path) -> Path:
@@ -217,6 +227,10 @@ class PdfLanguageDetector:
         output_file_dir = output_file_dir.parent / output_file_dir.stem
         output_file_dir = self.output_dir / output_file_dir
         return output_file_dir
+    
+
+    def is_already_analyzed(self, output_file_dir: Path) -> bool:
+        return (output_file_dir / 'avgs.json').exists()
     
 
     @property
