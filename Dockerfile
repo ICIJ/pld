@@ -21,7 +21,7 @@ ENV LANG=C.UTF-8
 WORKDIR /opt/app
 
 COPY . .
-RUN poetry install && 
+RUN poetry install
 
 ENTRYPOINT ["poetry", "run"]
 CMD ["pld", "--help"]
