@@ -15,7 +15,9 @@ class PdfLanguageDetector:
                 languages: List[str], 
                 input_dir: Path = Path(),
                 output_dir: Optional[Path] = 'out',
-                max_pages: Optional[int] = 5):
+                max_pages: Optional[int] = 5,
+                skip_images:  Optional[bool] = False,
+                skip_ocr:  Optional[bool] = False):
         """
         Initialize the PdfLanguageDetector class.
 
@@ -24,12 +26,16 @@ class PdfLanguageDetector:
             input_dir: Path to the input directory.
             output_dir: Path to the output directory.
             max_pages: Maximum number of pages to process per PDF file.
+            skip_images: Skip the extraction of PDF files as images.
+            skip_ocr: Skip the OCR of images from PDF files.
         """
         self.languages = [Language.get(language) for language in languages]
         self.lang_detector = LanguageDetectorBuilder.from_iso_codes_639_3(*self.lingua_langs).build()
         self.input_dir = input_dir
         self.output_dir = output_dir
         self.max_pages = max_pages
+        self.skip_images = skip_images
+        self.skip_ocr = skip_ocr
 
     def create_output_directories(self, *dirs: Path):
         """
@@ -167,8 +173,10 @@ class PdfLanguageDetector:
         texts_dir = output_file_dir / 'texts'
         langs_dir = output_file_dir / 'langs'
         self.create_output_directories(images_dir, texts_dir, langs_dir)
-        self.extract_images(input_file, images_dir)
-        self.process_images(images_dir, texts_dir, langs_dir)
+        if not self.skip_images:
+            self.extract_images(input_file, images_dir)
+        if not self.skip_ocr:
+            self.process_images(images_dir, texts_dir, langs_dir)
         coeff_avgs = self.calculate_coeff_avgs(langs_dir)
         coeff_avgs_file = output_file_dir.resolve() / 'avgs.json'
         with coeff_avgs_file.open("w") as f:
