@@ -24,6 +24,12 @@ Install with pip:
 python3 -m pip install --user pdf-language-detector
 ```
 
+Then run directly from your terminal:
+
+```bash
+pld --help
+````
+
 ### From the sources
 
 Clone the PLD repository:
@@ -37,6 +43,27 @@ Install the required Python packages with poetry:
 ```bash
 poetry install
 ````
+
+Then run inside a virtual env managed by poetry:
+
+```bash
+poetry run pld --help
+````
+
+### From Docker
+
+Install with Docker:
+
+```bash
+docker pull icij/pld
+```
+
+Then run inside a container:
+
+```bash
+docker run -it icij/pld pld --help
+```
+
 
 ## Usage
 
