@@ -64,7 +64,6 @@ Then run inside a container:
 docker run -it icij/pld pld --help
 ```
 
-
 ## Usage
 
 ### Detect
