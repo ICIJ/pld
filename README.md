@@ -94,6 +94,14 @@ pld report --help
     --output-dir: Path to the output directory. Default is 'out' directory in the current directory.
 ```
 
+## Test
+
+You can run the test suite (propulsed by pytest) with this command:
+
+```bash
+make test
+```
+
 ## Examples
 
 Process PDF files in the current directory, detect English and Spanish languages, and save the results in the 'results' directory:
