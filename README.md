@@ -1,4 +1,5 @@
-# PLD (PDF Language Detector)
+# PLD (PDF Language Detector)  [![](https://img.shields.io/github/actions/workflow/status/icij/pld/main.yml)](https://github.com/ICIJ/pld/actions)
+
 
 PLD is a Python program that analyzes PDF files, extracts images, processes them using Optical Character Recognition (OCR), and detects the dominant language of the text. It provides language detection information in JSON format and calculates the average confidence coefficient for each language.
 
