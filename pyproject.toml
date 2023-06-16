@@ -18,6 +18,13 @@ langcodes = {extras = ["data"], version = "^3.3.0"}
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.2"
 
+[tool.pytest.ini_options]
+filterwarnings = [
+    "error",
+    "ignore::UserWarning",
+    'ignore:pkg_resources is deprecated as an API',
+]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

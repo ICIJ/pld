@@ -15,7 +15,7 @@ from typing import Optional, List
 class PdfLanguageDetector:
     STATUS_SKIPPED = 'SKIPPED'
     STATUS_DONE = 'DONE'
-    STATUS_FAILED = 'FAILED'
+    STATUS_FAILED = 'FAILED '
     
     def __init__(self, 
                 languages: List[str], 
@@ -101,7 +101,7 @@ class PdfLanguageDetector:
         with text_file.open("a") as f:
             f.write(image_text)
 
-    def save_language(self, detected_lang, lang_file: Path):
+    def save_language(self, detected_lang: List[list], lang_file: Path):
         """
         Save detected language information to a JSON file.
 
