@@ -82,6 +82,7 @@ pld detect --help
     --skip-images (optional): Skip the extraction of PDF files a images.
     --skip-ocr (optional): Skip the OCR of images from PDF files.
     --parallel (optional): Number of threads to run in parallel.
+    --relative-to (optional): Path to the directory relative to which build the output dir path.
 ```
 
 ### Report

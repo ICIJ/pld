@@ -25,7 +25,8 @@ class PdfLanguageDetector:
                 resume:  Optional[bool] = False,
                 skip_images:  Optional[bool] = False,
                 skip_ocr:  Optional[bool] = False,
-                parallel: Optional[int] = 1):
+                parallel: Optional[int] = 1,
+                relative_to: Optional[Path] = None):
         """
         Initialize the PdfLanguageDetector class.
 
@@ -38,6 +39,7 @@ class PdfLanguageDetector:
             skip_images: Skip the extraction of PDF files as images.
             skip_ocr: Skip the OCR of images from PDF files.
             parallel: Number of threads to run in parallel.
+            relative_to: Path to the directory relative to which build the output dir path.
         """
         self.languages = [Language.get(language) for language in languages]
         self.lang_detector = LanguageDetectorBuilder.from_iso_codes_639_3(*self.lingua_langs).build()
@@ -48,6 +50,7 @@ class PdfLanguageDetector:
         self.skip_images = skip_images
         self.skip_ocr = skip_ocr
         self.parallel = parallel
+        self.relative_to = input_dir.resolve() if relative_to is None else relative_to.resolve()
 
     def create_output_directories(self, *dirs: Path):
         """
@@ -297,7 +300,7 @@ class PdfLanguageDetector:
         Returns:
             The output directory path.
         """
-        output_file_dir = input_file.relative_to(self.input_dir)
+        output_file_dir = input_file.resolve().relative_to(self.relative_to)
         output_file_dir = output_file_dir.parent / output_file_dir.stem
         output_file_dir = self.output_dir / output_file_dir
         return output_file_dir

@@ -15,11 +15,13 @@ def detect(languages: List[str] = typer.Option(..., '--language', help="An ISO3 
          resume: Optional[bool] = typer.Option(False, help="Skip PDF files already analyzed."),
          skip_images:  Optional[bool] = typer.Option(False, help="Skip the extraction of PDF files as images."),
          skip_ocr:  Optional[bool] = typer.Option(False, help="Skip the OCR of images from PDF files."),
-         parallel: Optional[int] = typer.Option(1, help="Number of paralell PDF to process in threads.")):
+         parallel: Optional[int] = typer.Option(1, help="Number of paralell PDF to process in threads."),
+         relative_to: Optional[Path] = typer.Option(None, help="Path to the directory relative to which build the output dir path.")):
     """
     Process PDF files and detect the dominant language.
     """
-    detector = PdfLanguageDetector(languages, input_dir, output_dir, max_pages, resume, skip_images, skip_ocr, parallel)
+    detector = PdfLanguageDetector(languages, input_dir, output_dir, max_pages, resume, 
+                                   skip_images, skip_ocr, parallel, relative_to)
     detector.process_input_files()
 
 @app.command()

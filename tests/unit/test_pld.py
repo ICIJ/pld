@@ -93,3 +93,42 @@ def test_lingua_langs(pdf_language_detector):
     result = pdf_language_detector.lingua_langs
     # Then
     assert result == expected_result
+
+def test_get_output_dir_with_relative_to_none(mocker):
+    # Given
+    languages = ['eng', 'fra']
+    input_dir = Path('input')
+    output_dir = Path('output')
+    input_file = Path('input/test.pdf')
+    
+    # Mock the resolve method to avoid actual file interactions
+    mocker.patch.object(Path, "resolve", return_value=Path('input/test.pdf'))
+    
+    detector = PdfLanguageDetector(languages, input_dir=input_dir, output_dir=output_dir)
+    expected_output_dir = output_dir / 'test'
+
+    # When
+    actual_output_dir = detector.get_output_dir(input_file)
+    
+    # Then
+    assert actual_output_dir.resolve() == expected_output_dir.resolve()
+
+def test_get_output_dir_with_relative_to(mocker):
+    # Given
+    languages = ['eng', 'fra']
+    input_dir = Path('input')
+    output_dir = Path('output')
+    relative_to = Path('input/subfolder')
+    input_file = Path('input/subfolder/test.pdf')
+    
+    # Mock the resolve method to avoid actual file interactions
+    mocker.patch.object(Path, "resolve", return_value=Path('input/subfolder/test.pdf'))
+    
+    detector = PdfLanguageDetector(languages, input_dir=input_dir, output_dir=output_dir, relative_to=relative_to)
+    expected_output_dir = output_dir / 'test'
+
+    # When
+    actual_output_dir = detector.get_output_dir(input_file)
+    
+    # Then
+    assert actual_output_dir.resolve() == expected_output_dir.resolve()
