@@ -76,9 +76,12 @@ def detect(
     detector.process_input_files()
 
 @app.command()
-def report(output_dir: Optional[Path] = typer.Option('out', help="Path to the output directory.")):
+def report(
+    report_file: Path = typer.Argument(help="Path to report files."),
+    output_dir: Optional[Path] = typer.Option('out', help="Path to the output directory."),
+    report_format: Optional[str] = typer.Option('json', help="Format of the report (only JSON and YAML are currently supported)")):
     """
     Process generated files to output a report
     """
-    report = Report(output_dir)
+    report = Report(report_file, output_dir, report_format)
     report.generate()
