@@ -13,7 +13,7 @@ install_poetry:
 		poetry install --with dev
 
 test:
-		poetry run pytest
+		PYTHONPATH=. poetry run pytest
 
 tag_version: 
 		git commit -m "build: bump to ${CURRENT_VERSION}" pyproject.toml
