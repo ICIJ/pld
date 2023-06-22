@@ -35,7 +35,7 @@ class Report:
         with Progress(SpinnerColumn(), "[progress.description]{task.description}", transient=True) as progress:
             task = progress.add_task('Fetching reports...', total=None)            
             # Loop through each directory in the output directory path.
-            for output_dir in self.output_dir.glob('*/**/'):
+            for output_dir in self.get_reports_dirs():
                 # Check if the current directory is a valid output directory.
                 if self.is_valid_output_dir(output_dir):
                     # If the directory is valid, get the report and append it to the list.
@@ -94,6 +94,15 @@ class Report:
         meta = self.get_output_dir_meta(output_dir)
         lang = max(coeff_avgs, key=coeff_avgs.get)
         return dict(lang=lang, **meta)
+    
+    def get_reports_dirs(self):
+        """
+        Returns a list of all reports dirs in the output_dir.
+
+        Returns:
+            A list of all reports dirs in the output_dir.
+        """
+        return self.output_dir.glob('*/**/')
         
     def get_coeff_avgs(self, output_dir: Path) -> dict:
         """
